@@ -29,6 +29,9 @@ function Dashboard() {
             <Link to="/update-profile" className='btn btn-primary w-100 mt-3'>
               Update Profile
             </Link>
+            <Link to="/change-password" className='btn btn-primary w-100 mt-3'>
+              Change Password
+            </Link>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
