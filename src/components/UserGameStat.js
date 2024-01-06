@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from '../firebase';
 
-function UpdateProfile() {
+function UserGameStat() {
   
   const { currentUser, updateProfile } = useAuth();
   const [error, setError ] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [docExists, setDocExists] = useState(true);
 
   const [formData, setFormData] = useState({
     // Initialize form fields
@@ -30,7 +29,6 @@ function UpdateProfile() {
           // Update state with Firestore data
           setFormData(docSnap.data());
         } else {
-          setDocExists(false);
           console.log('No such document!');
         }
       } catch (error) {
@@ -53,7 +51,7 @@ function UpdateProfile() {
     setError("");
     setLoading(true);
 
-    updateProfile(formData.name, formData.phone, formData.school, docExists)
+    updateProfile(formData.name, formData.phone, formData.school)
     .then(() => {
       navigate("/");
     }).catch(() => {
@@ -99,4 +97,4 @@ function UpdateProfile() {
   )
 }
 
-export default UpdateProfile
+export default UserGameStat

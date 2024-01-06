@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth, db } from '../firebase';
 import { updateEmail, updatePassword, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail} from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
 const AuthContext = React.createContext();
 
@@ -32,7 +32,7 @@ export function AuthProvider({children}) {
   function updtPassword(password) {
     return updatePassword(currentUser, password)
   }
-  function updateProfile(name, phone, school) {
+  function updateProfile(name, phone, school, docExists) {
     console.log("name, phone, school", name, phone, school);
     console.log("currentUser", currentUser);
 
@@ -40,8 +40,52 @@ export function AuthProvider({children}) {
       name : name,
       school : school,
       phone : phone
-  };
-  return setDoc(doc(db, "userProfile", currentUser.uid), docData);
+      };
+
+      if (docExists){
+        return updateDoc(doc(db, "userProfile", currentUser.uid), docData);
+      } else {
+        return setDoc(doc(db, "userProfile", currentUser.uid), docData);
+      }
+      
+  //   const docData = {
+  //     stringExample: "Hello world!",
+  //     booleanExample: true,
+  //     numberExample: 3.14159265,
+  //     dateExample: Timestamp.fromDate(new Date("December 10, 1815")),
+  //     arrayExample: [5, true, "hello"],
+  //     nullExample: null,
+  //     objectExample: {
+  //         a: 5,
+  //         b: {
+  //             nested: "foo"
+  //         }
+  //     }
+  // };
+  // return setDoc(doc(db, "data", "one"), docData);
+  }
+  function updateGameStat(nPlayed, nWon, currentStreak, maxStreak, g1, g2, g3, g4, g5, docExists, uid) {
+    console.log("in updateGameStat", nPlayed, nWon, currentStreak, maxStreak);
+    //console.log("currentUser", currentUser);
+
+    const docData = {
+      nPlayed : nPlayed,
+      nWon : nWon,
+      currentStreak : currentStreak,
+      maxStreak : maxStreak,
+      g1 : g1,
+      g2 : g2,
+      g3 : g3,
+      g4 : g4,
+      g5 : g5
+    };
+      
+      if (docExists){
+        return updateDoc(doc(db, "userGameStat", uid), docData);
+      } else {
+        return setDoc(doc(db, "userGameStat", uid), docData);
+      }
+      
   //   const docData = {
   //     stringExample: "Hello world!",
   //     booleanExample: true,
@@ -99,6 +143,7 @@ export function AuthProvider({children}) {
     updtEmail,
     updtPassword,
     updateProfile,
+    updateGameStat,
     fetchUser
   }
   return (

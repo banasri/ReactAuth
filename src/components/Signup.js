@@ -9,7 +9,7 @@ function Signup() {
   const emailRef =useRef();
   const passwordRef =useRef();
   const passwordConfirmRef =useRef();
-  const { signup } = useAuth();
+  const { signup, updateGameStat } = useAuth();
   const [error, setError ] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -22,7 +22,9 @@ function Signup() {
     try{
         setError("");
         setLoading(true);
-        await signup(emailRef.current.value, passwordRef.current.value);  
+        const credentials = await signup(emailRef.current.value, passwordRef.current.value);  
+        console.log("user created, going to update game stat")
+        await updateGameStat(0, 0, 0, 0, 0, 0, 0, 0,0, false, credentials.user.uid);
         navigate("/");  
     } catch(e) {
         console.log('error', e);
